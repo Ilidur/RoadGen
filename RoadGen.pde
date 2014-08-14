@@ -93,6 +93,15 @@ boolean deleteNode(Point a){
 boolean merge(Point a, Point b){
  
  if(points.contains(a)&&points.contains(b)){
+   for(Line connection : connections){
+      if(connection.a == a){
+        connection.a = b;
+      }
+      else if(connection.b == a){
+        connection.b = b; 
+      }
+   }
+   points.remove(a); 
    return true;
  } 
  return false;
@@ -129,10 +138,11 @@ void setup(){
   g.addNode(p2);
   g.addNode(p3);
   g.addConnection(p1,p3);
-  g.addConnection(p1,p2);
+  //g.addConnection(p1,p2);
   g.addConnection(p3, p2);
-  g.deleteConnection(p2,p3);
+  //g.deleteConnection(p2,p3);
   //g.deleteNode(p2);
+ // g.merge(p3,p2);
 }
 
 void draw(){
