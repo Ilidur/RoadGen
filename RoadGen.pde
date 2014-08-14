@@ -61,6 +61,43 @@ boolean addConnection(Point a, Point b){
 
 }
 
+boolean deleteConnection(Point a, Point b){
+ if(points.contains(a)&&points.contains(b)){
+   for(Line connection : connections){
+    if((connection.a == a && connection.b == b) || (connection.a == b && connection.b == a)){
+       connections.remove(connection);
+       return true;
+    } 
+  }
+ } 
+ return false;
+}
+
+boolean deleteNode(Point a){
+  if(points.contains(a)){
+   ArrayList<Line> toDelete = new ArrayList<Line>();
+   for(Line connection : connections){
+    if(connection.b == a || connection.a == a){
+      toDelete.add(connection); // to stop concurrent modification expection, gather ones to delete first, then delete
+    } 
+   }
+   points.remove(a); 
+   for(Line remove : toDelete){
+    connections.remove(remove); 
+   }
+   return true;
+  }
+  return false;
+}
+
+boolean merge(Point a, Point b){
+ 
+ if(points.contains(a)&&points.contains(b)){
+   return true;
+ } 
+ return false;
+}
+
 void draw(){
   stroke(0,255,0);
  strokeWeight(3);
@@ -87,17 +124,17 @@ void setup(){
   g = new Graph();
   Point p1 = new Point(10,20);
   Point p2 = new Point(20,30);
+  Point p3 = new Point(30,20);
   g.addNode(p1);
   g.addNode(p2);
+  g.addNode(p3);
+  g.addConnection(p1,p3);
   g.addConnection(p1,p2);
+  g.addConnection(p3, p2);
+  g.deleteConnection(p2,p3);
+  //g.deleteNode(p2);
 }
 
 void draw(){
   g.draw(); 
 }
-
-
-
-
-
-
