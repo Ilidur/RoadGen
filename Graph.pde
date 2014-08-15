@@ -122,7 +122,31 @@ class Graph {
     return false;
   }
 
-  GraphNode findClosestUnconnectedNode(GraphNode sourceNode, float distance) {
+  GraphNode getClosestNodeInRadius(float x, float y, float radius) {
+    GraphNode returnedNode = null;
+    float minDistance = radius;
+    for (GraphNode currentNode : nodes) {
+      float distDiff = dist(x, y, currentNode.x, currentNode.y);
+      if (distDiff<minDistance) {
+        returnedNode=currentNode;
+        minDistance=distDiff;
+      }
+    }
+    return returnedNode;
+  }
+  ArrayList<GraphNode> getNodesInRadius(float x, float y, float radius) {
+    ArrayList<GraphNode> returnedNodes = new ArrayList<GraphNode>();
+    
+    for (GraphNode currentNode : nodes) {
+      float distDiff = dist(x, y, currentNode.x, currentNode.y);
+      if (distDiff<radius) {
+        returnedNodes.add(currentNode);
+      }
+    }
+    return returnedNodes;
+  }
+
+  GraphNode getClosestUnconnectedNode(GraphNode sourceNode, float distance) {
     GraphNode returnedNode = null;
 
     //make a list of connected nodes and their respective connections
@@ -141,7 +165,7 @@ class Graph {
     float minDistance = distance;
     for (GraphNode currentNode : nodes) {
       float distDiff = dist(sourceNode.x, sourceNode.y, currentNode.x, currentNode.y);
-      if (distDiff<distance && distDiff<minDistance && !neighbours.contains(currentNode)) {
+      if (distDiff<minDistance && !neighbours.contains(currentNode)) {
         returnedNode=currentNode;
         minDistance=distDiff;
       }
@@ -150,7 +174,7 @@ class Graph {
   }
 
   boolean snapToClosestNode(GraphNode sourceNode, float distance) {
-    GraphNode destinationNode = findClosestUnconnectedNode(sourceNode, distance);
+    GraphNode destinationNode = getClosestUnconnectedNode(sourceNode, distance);
     if (destinationNode!=null) {
       mergeInto(sourceNode, destinationNode);
       return true;
