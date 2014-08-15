@@ -16,6 +16,7 @@ void setup() {
   g.addEdge(p1, p3);
   g.addEdge(p3, p2);
   g.addEdge(p2, p4);
+  g.snapToClosestNode(p4,100.f);
 }
 
 void draw() {

@@ -1,3 +1,5 @@
+import java.util.HashSet;
+
 class Graph {
   ArrayList<GraphNode> nodes;
   ArrayList<GraphEdge> edges;
@@ -117,6 +119,42 @@ class Graph {
       nodes.remove(a); 
       return true;
     } 
+    return false;
+  }
+
+  GraphNode findClosestUnconnectedNode(GraphNode sourceNode, float distance) {
+    GraphNode returnedNode = null;
+
+    //make a list of connected nodes and their respective connections
+    //i.e.up to second degree connections
+    HashSet<GraphNode> neighbours = new HashSet<GraphNode>();
+    neighbours.add(sourceNode);
+    for (GraphEdge edge : sourceNode.edges) {
+      GraphNode connectedNode = edge.getOtherNode(sourceNode);
+      neighbours.add(connectedNode);
+      for (GraphEdge secondaryEdge : connectedNode.edges) {
+        neighbours.add(secondaryEdge.getOtherNode(connectedNode));
+      }
+    }
+
+    //find the closest node with 
+    float minDistance = distance;
+    for (GraphNode currentNode : nodes) {
+      float distDiff = dist(sourceNode.x, sourceNode.y, currentNode.x, currentNode.y);
+      if (distDiff<distance && distDiff<minDistance && !neighbours.contains(currentNode)) {
+        returnedNode=currentNode;
+        minDistance=distDiff;
+      }
+    }
+    return returnedNode;
+  }
+
+  boolean snapToClosestNode(GraphNode sourceNode, float distance) {
+    GraphNode destinationNode = findClosestUnconnectedNode(sourceNode, distance);
+    if (destinationNode!=null) {
+      mergeInto(sourceNode, destinationNode);
+      return true;
+    }
     return false;
   }
 
