@@ -137,7 +137,7 @@ class Graph {
       }
     }
 
-    //find the closest node with 
+    //find the closest node not in the list of second degree connections
     float minDistance = distance;
     for (GraphNode currentNode : nodes) {
       float distDiff = dist(sourceNode.x, sourceNode.y, currentNode.x, currentNode.y);
