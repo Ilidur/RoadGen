@@ -104,6 +104,34 @@ class Graph {
     return false;
   }
 
+  //returns the closest point
+  Point proximitySearch(Point headPoint, float distance) {
+    Point returnedPoint=null;
+    float minDist=distance;
+    for (Point currentPoint : points) {
+      if(currentPoint == headPoint){
+        continue;
+      }
+      println("Point:"+currentPoint);
+      float distDiff=dist(headPoint.x, headPoint.y, currentPoint.x, currentPoint.y);
+      if (distDiff<distance && distDiff<minDist) {
+        for (Line connection : connections) {
+          println(connection.a.x+','+connection.a.y+" "+connection.b.x+','+connection.b.y);
+          //still broken... need to figure out how not to connect overlapping edges.. 
+          //so head point is not allowed to connect to it's neighbours and it's neigbours' neigbours.
+          if (((connection.a == currentPoint) || (connection.b == currentPoint)) && ! ((connection.a == headPoint) || (connection.b == headPoint))) {
+            returnedPoint=currentPoint;
+            minDist=distDiff;
+            println("Match!");
+            break;
+          }
+        }
+      }
+    }
+    println("returned "+returnedPoint);
+    return returnedPoint;
+  }
+
   void draw() {
     stroke(0, 255, 0);
     strokeWeight(3);
@@ -127,13 +155,19 @@ void setup() {
   Point p1 = new Point(10, 20);
   Point p2 = new Point(20, 30);
   Point p3 = new Point(30, 20);
+  Point p4 = new Point(50, 20);
+
   g.addNode(p1);
   g.addNode(p2);
   g.addNode(p3);
-  g.addConnection(p1, p3);
-  //g.addConnection(p1,p2);
+  g.addNode(p4);
+  g.addConnection(p1, p2);
   g.addConnection(p3, p2);
-
+  g.addConnection(p3, p4);
+  Point pSearch = g.proximitySearch(p4,70.f);
+  if(pSearch!=null){
+    g.merge(p4, pSearch);
+  }
   //g.deleteConnection(p2,p3);
   //g.deleteNode(p2);
   // g.merge(p3,p2);
